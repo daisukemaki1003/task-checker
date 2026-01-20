@@ -16,16 +16,25 @@ function notifyDeadlines_today_and_3days_daisukemaki(): void {
   const todayTasks = tasks.filter(t => isDateInRangeYmd_(today, t.dateStart, t.dateEnd));
   const in3Tasks = tasks.filter(t => isDateInRangeYmd_(in3, t.dateStart, t.dateEnd));
 
-  const blocks: string[] = [];
+  const attachments: any[] = [];
   if (todayTasks.length) {
-    blocks.push(`🚨 *当日*（${today}）`);
-    blocks.push(...todayTasks.map(formatTaskLine_));
-    blocks.push("");
+    attachments.push({
+      color: "#E01E5A",
+      title: `当日（${today}）`,
+      text: formatTasksForAttachment_(todayTasks),
+      mrkdwn_in: ["text", "title"]
+    });
   }
   if (in3Tasks.length) {
-    blocks.push(`⏰ *3日後*（${in3}）`);
-    blocks.push(...in3Tasks.map(formatTaskLine_));
+    attachments.push({
+      color: "#ECB22E",
+      title: `3日後（${in3}）`,
+      text: formatTasksForAttachment_(in3Tasks),
+      mrkdwn_in: ["text", "title"]
+    });
   }
 
-  postToSlack_(blocks.join("\n").trim());
+  const mention = SLACK_MENTION_TEXT ? `${SLACK_MENTION_TEXT} ` : "";
+  const summary = `${mention}期限リマインド（今日 ${todayTasks.length}件 / 3日後 ${in3Tasks.length}件）`;
+  postToSlack_(summary, attachments);
 }

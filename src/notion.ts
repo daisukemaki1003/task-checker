@@ -1,20 +1,31 @@
 function queryTasksByScheduleOr_(assigneeUserId: string, dateYmdList: string[]): Task[] {
+  const uniqueDates = Array.from(new Set(dateYmdList));
+  const merged: Task[] = [];
+  const seenUrls = new Set<string>();
+
+  uniqueDates.forEach(ymd => {
+    const tasks = queryTasksByScheduleContainsDate_(assigneeUserId, ymd);
+    tasks.forEach(t => {
+      if (seenUrls.has(t.url)) return;
+      seenUrls.add(t.url);
+      merged.push(t);
+    });
+  });
+
+  return merged;
+}
+
+function queryTasksByScheduleContainsDate_(assigneeUserId: string, ymd: string): Task[] {
   const url = `https://api.notion.com/v1/databases/${NOTION_DATABASE_ID}/query`;
   const notionToken = getRequiredScriptProperty_(NOTION_TOKEN_PROP_KEY);
-
-  const orFilters = dateYmdList.map(ymd => ({
-    and: [
-      { property: SCHEDULE_PROP, date: { on_or_before: ymd } },
-      { property: SCHEDULE_PROP, date: { on_or_after: ymd } }
-    ]
-  }));
 
   const payload = {
     filter: {
       and: [
         { property: ASSIGNEE_PROP, people: { contains: assigneeUserId } },
         { property: STATUS_PROP, status: { does_not_equal: DONE_STATUS } },
-        { or: orFilters }
+        { property: SCHEDULE_PROP, date: { on_or_before: ymd } },
+        { property: SCHEDULE_PROP, date: { on_or_after: ymd } }
       ]
     }
   };

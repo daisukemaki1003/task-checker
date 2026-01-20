@@ -2,6 +2,7 @@
 const NOTION_TOKEN_PROP_KEY = "NOTION_API_TOKEN";
 const NOTION_DATABASE_ID = "1e651189e7918028b6cbe047764989cf";
 const SLACK_WEBHOOK_URL_PROP_KEY = "SLACK_WEBHOOK_URL";
+const SLACK_MENTION_TEXT = "@maki daisuke"; // 必要なら "<@UXXXXXXX>" に置き換え
 
 // DBプロパティ
 const TITLE_PROP = "タスク名";
