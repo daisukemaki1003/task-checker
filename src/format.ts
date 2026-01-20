@@ -1,6 +1,6 @@
 function formatTaskLine_(t: Task): string {
   const dateRange = formatDateRange_(t.dateStart, t.dateEnd);
-  return `*<${t.url}|${t.title}>*（${dateRange}）`;
+  return `<${t.url}|${t.title}>（${dateRange}）`;
 }
 
 function formatDateRange_(startYmd: string, endYmd: string): string {
