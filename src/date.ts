@@ -11,8 +11,27 @@ function formatYmd_(date: Date): string {
   return `${y}-${m}-${d}`;
 }
 
-function isDateInRangeYmd_(ymd: string, startYmd: string, endYmd: string): boolean {
+function isStartOrEndOnDateYmd_(ymd: string, startYmd: string, endYmd: string): boolean {
   if (!startYmd) return false;
   const end = endYmd || startYmd;
-  return startYmd <= ymd && ymd <= end;
+  return ymd === startYmd || ymd === end;
+}
+
+function formatMdJp_(ymd: string): string {
+  if (!ymd) return "";
+  const parts = ymd.split("-");
+  if (parts.length < 3) return ymd;
+  const m = String(Number(parts[1]));
+  const d = String(Number(parts[2]));
+  return `${m}月${d}日`;
+}
+
+function formatYmdLongJp_(ymd: string): string {
+  if (!ymd) return "";
+  const parts = ymd.split("-");
+  if (parts.length < 3) return ymd;
+  const y = parts[0];
+  const m = String(Number(parts[1]));
+  const d = String(Number(parts[2]));
+  return `${y}年${m}月${d}日`;
 }

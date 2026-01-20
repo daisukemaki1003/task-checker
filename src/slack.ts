@@ -12,3 +12,9 @@ function postToSlack_(text: string, attachments: any[] = []): void {
     payload: JSON.stringify(payload)
   });
 }
+
+function buildMentionText_(): string {
+  if (!SLACK_MENTION_USER_ID || SLACK_MENTION_USER_ID.includes("X")) return "";
+  if (SLACK_MENTION_USER_ID.startsWith("<@")) return SLACK_MENTION_USER_ID;
+  return `<@${SLACK_MENTION_USER_ID}>`;
+}
